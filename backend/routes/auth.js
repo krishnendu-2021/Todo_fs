@@ -51,10 +51,10 @@ router.post(
       const token = jwt.sign(data, JWT_SECRET);
       // console.log(token);
       success = true;
-      res.json({ success, token: token });
+      return res.json({ success, token: token });
     } catch (error) {
       console.error({ message: error });
-      res.status(500).send("internal server occured");
+      return res.status(500).send("internal server occured");
     }
   }
 );
@@ -86,7 +86,7 @@ router.post(
       }
       let checkPass = await bcrypt.compare(password, user.password);
       if (!checkPass) {
-        res
+        return res
           .status(400)
           .json({ success, message: "Login with proper credentials" });
       } else {
@@ -97,11 +97,11 @@ router.post(
         };
         const token = jwt.sign(data, JWT_SECRET);
         success = true;
-        res.json({ success, token: token });
+        return res.json({ success, token: token });
       }
     } catch (error) {
       console.error({ message: error });
-      res.status(500).json("internal server occured");
+      return res.status(500).json({ error: "internal server occured" });
     }
   }
 );
@@ -114,7 +114,7 @@ router.post("/getuser", fetchUser, async (req, res) => {
     res.json(user);
   } catch (error) {
     console.error({ message: error });
-    res.status(500).send("internal server occured");
+    return res.status(500).send("internal server occured");
   }
 });
 
