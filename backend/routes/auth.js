@@ -29,7 +29,7 @@ router.post(
       if (userMail) {
         return res
           .status(400)
-          .send({ success, error: "please enter a unique email" });
+          .json({ success, error: "please enter a unique email" });
       }
 
       const salt = await bcrypt.genSalt(10);
@@ -51,7 +51,7 @@ router.post(
       const token = jwt.sign(data, JWT_SECRET);
       // console.log(token);
       success = true;
-      res.send({ success, token: token });
+      res.json({ success, token: token });
     } catch (error) {
       console.error({ message: error });
       res.status(500).send("internal server occured");
@@ -88,7 +88,7 @@ router.post(
       if (!checkPass) {
         res
           .status(400)
-          .send({ success, message: "Login with proper credentials" });
+          .json({ success, message: "Login with proper credentials" });
       } else {
         let data = {
           user: {
@@ -97,11 +97,11 @@ router.post(
         };
         const token = jwt.sign(data, JWT_SECRET);
         success = true;
-        res.send({ success, token: token });
+        res.json({ success, token: token });
       }
     } catch (error) {
       console.error({ message: error });
-      res.status(500).send("internal server occured");
+      res.status(500).json("internal server occured");
     }
   }
 );
@@ -111,7 +111,7 @@ router.post("/getuser", fetchUser, async (req, res) => {
   try {
     const userid = req.user.id;
     const user = await User.findById(userid).select("-password");
-    res.send(user);
+    res.json(user);
   } catch (error) {
     console.error({ message: error });
     res.status(500).send("internal server occured");
